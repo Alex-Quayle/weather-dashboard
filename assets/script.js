@@ -5,27 +5,37 @@ $("#search-button").on("click", function (e) {
     let location = $("#search-input").val();
     // If the input is a city
     // Extract the longitude and latitude from the API
-    let query = "http://api.openweathermap.org/geo/1.0/direct?q=" + location + "&limit=5&appid=APIKEY"
-    fetch(query)
-      .then(function (response) {
-        return response.json();
-      }).then(function (data) {
-    let latitude= data[0].lat;
-    let longitude = data[0].lon;
-    console.log(latitude);
-    console.log(longitude);
-  });
+    let geoQuery = "http://api.openweathermap.org/geo/1.0/direct?q=" + location + "&limit=5&appid=APIKEY"
+    fetch(geoQuery)
+        .then(function (response) {
+            return response.json();
+        }).then(function (data) {
+            let latitude = data[0].lat;
+            let longitude = data[0].lon;
+            getWeather(latitude, longitude);
+        });
+})
 
-
-
-
-
-
-
+function getWeather(latitude, longitude) {
     // Execute the API call, with the variable included
+    let query = "https://api.openweathermap.org/data/2.5/forecast?lat=" + latitude + "&lon=" + longitude + "&appid=APIKEY";
+    fetch(query)
+        .then(function (response) {
+            return response.json();
+        }).then(function (data) {
+            console.log(query);
+            let temp = data.list[0].main.temp;
+            toCelsius(temp);
+        });
     // Append to the page the current forecast (Date, Temp, Wind, Humidity)
     // Append to the page the future forecast (Date, icon?, Temp, Wind, Humidity)
     // If city isn't already on the sidebar
-        // Append the city to the history sidebar
+    // Append the city to the history sidebar
     // Else, return 
-})
+}
+
+function toCelsius(temp) {
+    // Celsius = Kelvin - 273.15
+    let celsius = temp - 273.15;
+    return celsius;
+}
