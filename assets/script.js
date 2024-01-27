@@ -1,7 +1,11 @@
+$(document).ready(function () {
+    localStorageLoad();
+});
+
 const current = $('#today');
 const future = $('#forecast')
 const sidebar = $('#history');
-// Makes cityName a global variable
+// Makes the following variables global
 let cityName;
 let previousCities;
 
@@ -56,10 +60,36 @@ function getWeather(latitude, longitude) {
                 // Creates and appends a button with the city name to the sidebar
                 previousCities = $(`<button type="submit">${cityName}</button>`)
                 $(sidebar).append(previousCities);
+                localStorageUpdate();
             }
         })
 }
 
+function localStorageUpdate() {
+    let sidebarCities = [];
+    // Retrieves each button from the sidebar in turn
+    $(sidebar).find('button').each(function () {
+        // Assigns the text within the button (the city) to the new array
+        sidebarCities.push($(this).text());
+    });
+    // Saves the array to local storage, using stringify to send the data to the web server as a string
+    localStorage.setItem('sidebarCities', JSON.stringify(sidebarCities));
+}
+
+function localStorageLoad() {
+    let storedCities = localStorage.getItem('sidebarCities');
+    // Checks to see if there are any existing cities in local storage, not running if there is none found
+    if (storedCities) {
+        // Converts the cities into an object
+        let cityArray = JSON.parse(storedCities);
+        // Retrieves each button from the sidebar in turn
+        for (let i = 0; i < cityArray.length; i++) {
+            let storedCity = $(`<button type="submit">${cityArray[i]}</button>`);
+            // Places the button(s) back on to the page
+            $(sidebar).append(storedCity);
+        }
+    }
+}
 $(sidebar).on('click', 'button', function (e) {
     e.preventDefault();
     $(current).empty();
