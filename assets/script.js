@@ -50,9 +50,12 @@ function getWeather(latitude, longitude) {
             // Appends the city name, date, temperature, wind speed, and humidity to the today's forecast container
             let currentForecast = $(`<h2>${cityName} (${dayjs().format('D/M/YYYY')})</h2><p>Temp: ${toCelsius(temp)} &deg;C</p><p>Wind: ${data.list[0].wind.speed} KPH</p><p>Humidity: ${data.list[0].main.humidity} %</p>`);
             $(current).append(currentForecast);
+            // Appends the title for the 5-day forecast
+            futureForecast = $(`<h3>5-Day Forecast:</h3>`)
+            $(future).append(futureForecast);
             // Iterates over the length of the JSON list, adding 8 to each index (to return the data at midnight of every new day)
             for (let i = 3; i < data.list.length; i += 8) {
-                futureForecast = $(`<div><h4>${dayjs().format('D/M/YYYY')}</h4><p>Temp: ${toCelsius(data.list[i].main.temp)} &deg;C</p><p>Wind: ${data.list[i].wind.speed} KPH</p><p>Humidity: ${data.list[i].main.humidity} %</p></div>`);
+                futureForecast = $(`<div class="col-2"><h4>${data.list[i].dt_txt[8]}${data.list[i].dt_txt[9]}${dayjs().format('/M/YYYY')}</h4><p>Temp: ${toCelsius(data.list[i].main.temp)} &deg;C</p><p>Wind: ${data.list[i].wind.speed} KPH</p><p>Humidity: ${data.list[i].main.humidity} %</p></div>`);
                 $(future).append(futureForecast);
             }
             // Checks to see if the city currently exists in the sidebar
@@ -90,6 +93,7 @@ function localStorageLoad() {
         }
     }
 }
+
 $(sidebar).on('click', 'button', function (e) {
     e.preventDefault();
     $(current).empty();

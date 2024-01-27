@@ -1,0 +1,13 @@
+#today {
+    padding: 10px;
+    border-style: solid;
+}
+
+#forecast div {
+    min-width: 150px;
+    min-height: 300px;
+    margin: 10px;
+    padding: 10px;
+    background-color: rgb(60, 69, 108);
+    color: white;
+}
