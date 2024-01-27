@@ -3,6 +3,7 @@ const future = $('#forecast')
 const sidebar = $('#history');
 // Makes cityName a global variable
 let cityName;
+let previousCities;
 
 $("#search-button").on("click", function (e) {
     // Prevents the default behaviour of the page refreshing
@@ -10,8 +11,12 @@ $("#search-button").on("click", function (e) {
     // Assigns the search box content to a variable
     cityName = $("#search-input").val();
     // TODO: If the input is a city
+    getCoordinates(cityName);
+})
+
+function getCoordinates(cityName) {
     // Extracts the longitude and latitude using the search input
-    let geoQuery = "http://api.openweathermap.org/geo/1.0/direct?q=" + cityName + "&limit=5&appid=API"
+    let geoQuery = "http://api.openweathermap.org/geo/1.0/direct?q=" + cityName + "&limit=5&appid="
     // API call that retrieves and stores the longitude/latitude for use in the getWeather function
     fetch(geoQuery)
         .then(function (response) {
@@ -21,11 +26,11 @@ $("#search-button").on("click", function (e) {
             let longitude = data[0].lon;
             getWeather(latitude, longitude);
         });
-})
+}
 
 function getWeather(latitude, longitude) {
     // Utilises the longitude/latiude variables to access the city's weather
-    let query = "https://api.openweathermap.org/data/2.5/forecast?lat=" + latitude + "&lon=" + longitude + "&appid=API";
+    let query = "https://api.openweathermap.org/data/2.5/forecast?lat=" + latitude + "&lon=" + longitude + "&appid=";
     fetch(query)
         .then(function (response) {
             return response.json();
@@ -39,12 +44,21 @@ function getWeather(latitude, longitude) {
                 futureForecast = $(`<div><h4>${dayjs().format('D/M/YYYY')}</h4><p>Temp: ${toCelsius(data.list[i].main.temp)} &deg;C</p><p>Wind: ${data.list[i].wind.speed} KPH</p><p>Humidity: ${data.list[i].main.humidity} %</p></div>`);
                 $(future).append(futureForecast);
             }
+            // If the city isn't already on the sidebar
+            previousCities = $(`<button type="submit">${cityName}</button>`)
+            $(sidebar).append(previousCities);
         })
 }
+
+$(sidebar).on('click', 'button', function (e) {
+    e.preventDefault();
+    let cityName = $(this).text();
+    getCoordinates(cityName);
+    console.log("hello world");
+});
 // If city isn't already on the sidebar
 // let previousCity = $(`<btn></btn>`)
 // $(sidebar).append(previousCity);
-// Append to the page the future forecast (Date, icon?, Temp, Wind, Humidity)
 // Append the city to the history sidebar
 // Else, return 
 
