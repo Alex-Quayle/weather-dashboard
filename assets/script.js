@@ -22,7 +22,7 @@ $("#search-button").on("click", function (e) {
 
 function getCoordinates(cityName) {
     // Extracts the longitude and latitude using the search input
-    let geoQuery = "http://api.openweathermap.org/geo/1.0/direct?q=" + cityName + "&limit=5&appid="
+    let geoQuery = "http://api.openweathermap.org/geo/1.0/direct?q=" + cityName + "&limit=5&appid=b7c9e5e51445e96e06f7ad6de3a1054d"
     // API call that retrieves and stores the latitude/longitude for use in the getWeather function
     fetch(geoQuery)
         .then(function (response) {
@@ -41,7 +41,7 @@ function getCoordinates(cityName) {
 
 function getWeather(latitude, longitude) {
     // Utilises the longitude/latiude variables to access the city's weather
-    let query = "https://api.openweathermap.org/data/2.5/forecast?lat=" + latitude + "&lon=" + longitude + "&appid=";
+    let query = "https://api.openweathermap.org/data/2.5/forecast?lat=" + latitude + "&lon=" + longitude + "&appid=b7c9e5e51445e96e06f7ad6de3a1054d";
     fetch(query)
         .then(function (response) {
             return response.json();
